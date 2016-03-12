@@ -1,4 +1,3 @@
-import java.awt.Image;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -10,7 +9,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.attribute.BasicFileAttributeView;
 import java.nio.file.attribute.BasicFileAttributes;
-import java.nio.file.attribute.FileTime;
 import java.util.ArrayList;
 import java.util.Observable;
 
@@ -71,9 +69,11 @@ public class Model extends Observable {
 	}
 
 	protected ImageIcon createImageIcon(String path, String description) {
-		// java.net.URL imgURL = getClass().getResource(path);
 		if (path != null) {
-			return new ImageIcon(path, description);
+			ImageIcon imgIcon = new ImageIcon(path, description);
+			if (imgIcon.getIconWidth() == -1)
+				return null;
+			return imgIcon;
 		} else {
 			System.err.println("Couldn't find file: " + path);
 			return null;

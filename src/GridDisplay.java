@@ -1,25 +1,13 @@
-import javax.swing.JPanel;
-import java.awt.GridLayout;
+import java.awt.Component;
+import java.awt.ComponentOrientation;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
-import java.awt.GridBagLayout;
-import javax.swing.JButton;
-import java.awt.GridBagConstraints;
-import java.awt.Insets;
-import java.awt.Rectangle;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
-import javax.swing.SwingConstants;
-import javax.swing.JLabel;
-import java.awt.ComponentOrientation;
-import java.awt.Dimension;
-import java.awt.Component;
-import java.awt.FlowLayout;
-import javax.swing.BoxLayout;
-import javax.swing.Box;
-import javax.swing.border.EtchedBorder;
+import javax.swing.JPanel;
 
 public class GridDisplay extends JPanel implements Observer {
 	float columns;
@@ -99,8 +87,13 @@ public class GridDisplay extends JPanel implements Observer {
 		} else {
 			for (int x = currentFilter; x < 6; x++) {
 				for (int i = 0; i < m.ImageCollectionModel[x].size(); i++) {
-					images.add(new ImageView(m.ImageCollectionModel[x].get(i), m));
+					ImageView imgView = new ImageView(m.ImageCollectionModel[x].get(i), m);
+					images.add(imgView);
+					if (!m.isGrid) {
+						imgView.convertGridElements();
+					}
 				}
+				
 				addImage();
 			}
 		}

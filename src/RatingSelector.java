@@ -1,17 +1,14 @@
-import javax.swing.JPanel;
-import java.awt.GridBagLayout;
-import javax.swing.JToggleButton;
-import javax.swing.UIManager;
-
 import java.awt.Dimension;
-import java.awt.GridBagConstraints;
 import java.awt.Font;
-import java.awt.Insets;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
-import java.awt.Color;
+
 import javax.swing.JButton;
+import javax.swing.JPanel;
+import javax.swing.UIManager;
 
 public class RatingSelector extends JPanel {
 

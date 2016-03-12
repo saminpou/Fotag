@@ -1,7 +1,7 @@
 Fotag
 Check the requirements for specs
 
-Developed on a OS X for OS X, but should work on Windows and Linux too.
+Developed on OS X for OS X, but should work on Windows and Linux too.
 
 "make" to build
 "make run" to run

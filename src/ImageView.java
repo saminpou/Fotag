@@ -1,6 +1,5 @@
 import java.awt.CardLayout;
 
-import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 public class ImageView extends JPanel {
@@ -33,7 +32,6 @@ public class ImageView extends JPanel {
 	}
 
 	protected void createNewFrame() {
-        System.out.println("Hi!");
         ImageDisplay imgDisplay = new ImageDisplay(imgModel.image);
         imgDisplay.setVisible(true);
 	}
