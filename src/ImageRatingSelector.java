@@ -1,25 +1,27 @@
-import javax.swing.JPanel;
-import java.awt.GridBagLayout;
-import javax.swing.JToggleButton;
-import javax.swing.UIManager;
-
 import java.awt.Dimension;
-import java.awt.GridBagConstraints;
 import java.awt.Font;
-import java.awt.Insets;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
-import java.awt.Color;
-import javax.swing.JButton;
+import java.util.Observable;
+import java.util.Observer;
 
-public class RatingSelector extends JPanel {
+import javax.swing.JButton;
+import javax.swing.JPanel;
+import javax.swing.SwingConstants;
+import javax.swing.UIManager;
+
+public class ImageRatingSelector extends JPanel implements Observer{
 
 	public ArrayList<JButton> myStars;
 	Model m;
-
-	public RatingSelector(Model model) {
+	ImageModel imgModel;
+	
+	public ImageRatingSelector(Model model, ImageModel imgModel) {
 		m = model;
+		this.imgModel = imgModel;
 		try {
 			UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
 		} catch (Exception e) {
@@ -28,15 +30,22 @@ public class RatingSelector extends JPanel {
 		setPreferredSize(new Dimension(250, 50));
 		myStars = new ArrayList<JButton>();
 		GridBagLayout gridBagLayout = new GridBagLayout();
-		gridBagLayout.columnWidths = new int[] { 0, 0, 0 };
+		gridBagLayout.columnWidths = new int[] { 0, 0, 0, 0, 0 };
 		gridBagLayout.rowHeights = new int[] { 0, 0 };
 		gridBagLayout.columnWeights = new double[] { 0.0, 0.0, Double.MIN_VALUE };
 		gridBagLayout.rowWeights = new double[] { 0.0, Double.MIN_VALUE };
 		setLayout(gridBagLayout);
-
+		int numStars = imgModel.rating;
 		for (int i = 1; i < 6; i++) {
-			final JButton b = new JButton("☆");
+			final JButton b;
+			if (i > numStars)
+				b = new JButton("☆");
+			else
+				b = new JButton("★");
+			
 			myStars.add(b);
+			b.setHorizontalAlignment(SwingConstants.LEFT);
+			b.setVerticalAlignment(SwingConstants.TOP);
 			b.setBorder(null);
 			b.setPreferredSize(new Dimension(50, 50));
 			b.setFont(new Font("Lucida Grande", Font.PLAIN, 35));
@@ -47,7 +56,6 @@ public class RatingSelector extends JPanel {
 			b.setOpaque(false);
 			b.setContentAreaFilled(false);
 			b.setBorderPainted(false);
-			
 			b.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent e) {
@@ -66,6 +74,7 @@ public class RatingSelector extends JPanel {
 			});
 
 			GridBagConstraints gbc = new GridBagConstraints();
+			gbc.anchor = GridBagConstraints.NORTHWEST;
 			gbc.gridx = i;
 			gbc.gridy = 0;
 			add(b, gbc);
@@ -74,7 +83,8 @@ public class RatingSelector extends JPanel {
 	}
 
 	public void clickStars(int btnIndex) {
-		if (btnIndex == m.filter) {
+		int pastIndex = imgModel.rating;
+		if (btnIndex == pastIndex) {
 			for (int x = 0; x < myStars.size(); x++) {
 				myStars.get(x).setText("☆");
 			}
@@ -83,12 +93,16 @@ public class RatingSelector extends JPanel {
 			for (int x = 0; x < myStars.size(); x++) {
 				myStars.get(x).setText("☆");
 			}
+			this.updateUI();
 			for (int x = 0; x < btnIndex; x++) {
 				myStars.get(x).setText("★");
 			}
+			this.updateUI();
 		}
-		m.filter = btnIndex;
-		m.updateAllDisplayedImages();
+		m.changeRating(imgModel, btnIndex);
+		//imgModel.rating = btnIndex;
+		this.updateUI();
+		
 	}
 
 	public void startHover(JButton b) {
@@ -99,30 +113,39 @@ public class RatingSelector extends JPanel {
 			}
 		}
 
-		for (int x = buttonIndex; x < myStars.size(); x++) {
+		for (int x = 0; x < myStars.size(); x++) {
 			myStars.get(x).setText("☆");
 		}
 
 		for (int x = 0; x <= buttonIndex; x++) {
 			myStars.get(x).setText("★");
 		}
+		this.updateUI();
 	}
 
 	public void stopHover(JButton b){
-		if (m.filter == 0) {
+		int i = m.filter;
+		int pastIndex = imgModel.rating;
+		if (pastIndex == 0) {
 			for (int x = 0; x < myStars.size(); x++) {
 				myStars.get(x).setText("☆");
 			}
 		} else {
 
-			for (int x = m.filter; x < myStars.size(); x++) {
+			for (int x = 0; x < myStars.size(); x++) {
 				myStars.get(x).setText("☆");
 			}
 
-			for (int x = 0; x < m.filter; x++) {
+			for (int x = 0; x < pastIndex; x++) {
 				myStars.get(x).setText("★");
 			}
 		}
+		this.updateUI();
+	}
+
+	@Override
+	public void update(Observable o, Object arg) {
+		this.updateUI();	
 	}
 }
 
